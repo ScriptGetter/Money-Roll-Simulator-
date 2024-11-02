@@ -1,0 +1,159 @@
+local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Orion/main/source'))()
+
+local Window = OrionLib:MakeWindow({
+    Name = "[OP] Money Roll Simulator ",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "OrionTest"
+})
+
+local Main = Window:MakeTab({
+    Name = "Main",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local autoRollEnabled = false
+local rolling = false
+
+Main:AddToggle({
+    Name = "Auto Roll",
+    Default = false,
+    Callback = function(Value)
+        autoRollEnabled = Value
+        if autoRollEnabled then
+            rolling = true
+            while rolling do
+                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("RollStart"):FireServer()
+                wait(0.5) -- Adjust the wait time as needed
+            end
+        else
+            rolling = false
+        end
+    end    
+})
+
+-- Ensure to stop rolling when the script ends or the toggle is turned off
+game:GetService("RunService").Stepped:Connect(function()
+    if not autoRollEnabled then
+        rolling = false
+    end
+end)
+
+local Main = Window:MakeTab({
+	Name = "Upgrade",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+Main:AddButton({
+	Name = "[UPGRADE] Luck",
+	Callback = function()
+      		local args = {
+    [1] = "Luck"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Upgrade"):InvokeServer(unpack(args))
+  	end    
+})
+
+Main:AddButton({
+	Name = "[UPGRADE] RollSpeed",
+	Callback = function()
+      		local args = {
+    [1] = "RollSpeed"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Upgrade"):InvokeServer(unpack(args))
+  	end    
+})
+
+Main:AddButton({
+	Name = "[UPGRADE] Race_Speed",
+	Callback = function()
+      		local args = {
+    [1] = "Race_Speed"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Upgrade"):InvokeServer(unpack(args))
+  	end    
+})
+
+local Main = Window:MakeTab({
+	Name = "Tycoon Tower",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+Main:AddButton({
+	Name = "Click To Claim Your Money",
+	Callback = function()
+      		local replicatedStorage = game:GetService("ReplicatedStorage")
+local claimCollector = replicatedStorage:WaitForChild("Events"):WaitForChild("ClaimCollector")
+
+-- Loop through plot names from 1 to 6
+for i = 1, 6 do
+    local plotName = "Plot_" .. i
+    local args = { [1] = plotName }
+    
+    -- Attempt to claim the plot
+    claimCollector:InvokeServer(unpack(args))
+end
+
+  	end    
+})
+
+local Main = Window:MakeTab({
+	Name = "🎁 Gifts",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+Main:AddButton({
+    Name = "[9 Hours CD | Unlock Areas Only] Claim Gifts",
+    Callback = function()
+        for i = 1, 20 do
+            local areaName = "Area " .. i
+            local args = {
+                [1] = areaName
+            }
+            
+            -- Attempt to claim the gift for each area
+            local success, message = pcall(function()
+                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("ClaimGift"):InvokeServer(unpack(args))
+            end)
+
+            if not success then
+                warn("Failed to claim gift for " .. areaName .. ": " .. message)
+            end
+        end
+    end    
+})
+
+
+local Main = Window:MakeTab({
+	Name = "📣 Misc",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+Main:AddButton({
+	Name = "Dont Forget To Subscribe!",
+	Callback = function()
+      		print("button pressed")
+  	end    
+})
+
+Main:AddButton({
+	Name = "I Spent almost 2 hour on this lol",
+	Callback = function()
+      		print("button pressed")
+  	end    
+})
+
+Main:AddButton({
+	Name = "I am new to make these things",
+	Callback = function()
+      		print("button pressed")
+  	end    
+})
